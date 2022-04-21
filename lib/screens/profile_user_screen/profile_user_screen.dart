@@ -16,6 +16,8 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../../providers/user_provider.dart';
+import '../../resources/auth_methods.dart';
+import '../LogIn_screen/login_screen.dart';
 
 class ProfileSreenn extends StatefulWidget {
   final String uid;
@@ -105,7 +107,7 @@ class _ProfileSreennState extends State<ProfileSreenn> {
             onPressed: () {
               _settingBottomSheet(context);
             },
-            icon: Icon(Icons.settings),
+            icon: Icon(Icons.menu),
           ),
         ],
       ),
@@ -612,6 +614,19 @@ void _settingBottomSheet(context) {
               icon: Icon(Icons.messenger_outline_outlined),
               tittle: 'Update messaging feature',
               press: () {},
+            ),
+            OptionWidget(
+              icon: Icon(Icons.logout),
+              tittle: 'Log Out',
+              press: () async {
+                await AuthMethods().SignOut();
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => LoginScreen(),
+                  ),
+                );
+              },
             ),
           ],
         ),

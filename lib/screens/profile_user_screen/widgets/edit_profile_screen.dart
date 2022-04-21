@@ -83,18 +83,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 }).catchError((err) {
                   showSnackBar(err.toString(), context);
                 });
-                //update in post
-                // await snapshotsPosts
-                //     .doc(widget.userProvider.getUser.uid)
-                //     .update({
-                //   'username': _nameControler.text,
-                // }).then((value) => print('success'));
-
-                // await snapshotsCmts
-                //     .doc(widget.userProvider.getUser.uid)
-                //     .update({
-                //   'name': _nameControler.text,
-                // }).then((value) => print('Success'));
               }
             },
             icon: Icon(

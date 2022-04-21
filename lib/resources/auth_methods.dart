@@ -106,14 +106,16 @@ class AuthMethods {
     return res;
   }
 
-  Future<String> changePasswrod(String newPass) async {
-    String res = "Some error";
+  Future<void> changePasswrod(String newPass) async {
     User user = _auth.currentUser!;
     user.updatePassword(newPass).then((value) {
-      res = "Update PassSuccess";
+      print('Success');
     }).catchError((err) {
-      res = err.toString();
+      print(err.toString());
     });
-    return res;
+  }
+
+  Future<void> SignOut() async {
+    await _auth.signOut();
   }
 }
