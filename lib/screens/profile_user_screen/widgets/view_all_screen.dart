@@ -41,7 +41,13 @@ class _ViewAllScreenState extends State<ViewAllScreen> {
         title: Text('Discover People'),
       ),
       body: StreamBuilder(
-        stream: FirebaseFirestore.instance.collection('users').snapshots(),
+        stream: FirebaseFirestore.instance
+            .collection('users')
+            .where(
+              'uid',
+              isNotEqualTo: userProvider.getUser.uid,
+            )
+            .snapshots(),
         builder: (context,
             AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
