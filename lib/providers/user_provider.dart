@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:instagran_tute/resources/auth_methods.dart';
+import 'package:provider/provider.dart';
 
 import '../models/user.dart';
 
