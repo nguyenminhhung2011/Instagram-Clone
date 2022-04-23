@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:instagran_tute/models/Notification.dart';
 import 'package:instagran_tute/models/message.dart';
 import 'package:instagran_tute/models/post.dart';
 import 'package:instagran_tute/resources/storage_methods.dart';
@@ -61,6 +62,28 @@ class FireStoreMethods {
         date: DateTime.now(),
       );
       _firestore.collection('messages').doc(messId).set(mess.toJson());
+      print('success');
+    } catch (err) {
+      print(err.toString());
+    }
+  }
+
+  Future<void> upLoadNotifi(
+    String uidOp,
+    String uidUser,
+    String uidPost,
+    int typeNotifi,
+  ) async {
+    String noId = const Uuid().v1();
+    try {
+      NotifiCation noti = NotifiCation(
+        uid: noId,
+        uidOp: uidOp,
+        uidUser: uidUser,
+        uidPost: uidPost,
+        typeNotifi: typeNotifi,
+      );
+      _firestore.collection('notifications').doc(noId).set(noti.toJson());
       print('success');
     } catch (err) {
       print(err.toString());

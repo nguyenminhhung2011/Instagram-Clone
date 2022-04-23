@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:instagran_tute/providers/user_provider.dart';
 import 'package:instagran_tute/screens/LogIn_screen/login_screen.dart';
+import 'package:instagran_tute/screens/Notification/notification_screen.dart';
 import 'package:instagran_tute/screens/SignUp_screen/signUp_screen.dart';
 import 'package:instagran_tute/screens/fedd_screen/fedd_screen.dart';
 import 'package:instagran_tute/screens/profile_user_screen/profile_user_screen.dart';
@@ -70,9 +71,7 @@ class _MobileScreenLayoutState extends State<MobileScreenLayout> {
           FeedScreen(),
           SearchScreen(),
           AddPostScreen(),
-          Center(
-            child: Text('Like'),
-          ),
+          NotificationScreen(),
           ProfileSreenn(uid: ""),
         ],
         //child: Text('hala'),
