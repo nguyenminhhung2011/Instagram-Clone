@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:instagran_tute/models/message.dart';
 import 'package:instagran_tute/models/post.dart';
 import 'package:instagran_tute/resources/storage_methods.dart';
 import 'package:uuid/uuid.dart';
@@ -39,6 +40,31 @@ class FireStoreMethods {
       res = err.toString();
     }
     return res;
+  }
+
+  Future<void> sendMessage(
+    String photoUrl,
+    String tittle,
+    String uid1,
+    String uid2,
+    int typeMessage,
+  ) async {
+    String messId = const Uuid().v1();
+    try {
+      Message mess = Message(
+        tittle: tittle,
+        uid1: uid1,
+        uid2: uid2,
+        photoUrl: photoUrl,
+        typeMessage: typeMessage,
+        uidMessage: messId,
+        date: DateTime.now(),
+      );
+      _firestore.collection('messages').doc(messId).set(mess.toJson());
+      print('success');
+    } catch (err) {
+      print(err.toString());
+    }
   }
 
   Future<void> ListPost(String postUid, String uid, List Likes) async {
