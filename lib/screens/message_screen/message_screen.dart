@@ -161,7 +161,174 @@ class MessageUserItem extends StatelessWidget {
         ? Container()
         : InkWell(
             onTap: () {
-              showDialog(context: context, builder: (context) => Dialog());
+              showDialog(
+                barrierDismissible: true,
+                context: context,
+                builder: (context) => Dialog(
+                  child: Container(
+                    width: MediaQuery.of(context).size.width - 4,
+                    height: MediaQuery.of(context).size.height - 80,
+                    padding: EdgeInsets.all(20),
+                    color: mobileBackgroundColor,
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.vertical,
+                      child: Column(
+                        children: [
+                          Row(
+                            children: [
+                              IconButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                icon: Icon(Icons.arrow_back),
+                              ),
+                              Spacer(),
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  CircleAvatar(
+                                    backgroundImage: NetworkImage(
+                                      snap['photoUrl'],
+                                    ),
+                                    radius: 25,
+                                  ),
+                                  const SizedBox(height: 5),
+                                  Text(
+                                    snap['username'],
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                ],
+                              ),
+                              Spacer(),
+                              IconButton(
+                                onPressed: () {},
+                                icon: Icon(Icons.call_outlined),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 10),
+                          Container(
+                            width: double.infinity,
+                            height: 0.3,
+                            color: Colors.white.withOpacity(0.5),
+                          ),
+                          const SizedBox(height: 5),
+                          Container(
+                            width: double.infinity,
+                            height: MediaQuery.of(context).size.height -
+                                MediaQuery.of(context).size.height / 7 * 2,
+                            child: SingleChildScrollView(
+                              child: Column(
+                                children: [
+                                  const SizedBox(height: 10),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      CircleAvatar(
+                                        backgroundImage:
+                                            NetworkImage(snap['photoUrl']),
+                                        radius: 60,
+                                      ),
+                                      const SizedBox(height: 5),
+                                      Text(
+                                        snap['username'],
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 20,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 2),
+                                      Text('Instagram'),
+                                      const SizedBox(height: 5),
+                                      Text(
+                                        '${snap['followers'].length} Followers . ${snap['following'].length} Following',
+                                        style: TextStyle(
+                                          color: Colors.white.withOpacity(0.5),
+                                        ),
+                                      ),
+                                      const SizedBox(height: 5),
+                                      Text(
+                                        'You guys are following each other on Instagram',
+                                        style: TextStyle(
+                                          color: Colors.white.withOpacity(0.5),
+                                        ),
+                                      ),
+                                      const SizedBox(height: 5),
+                                      Text(
+                                        'Follow ${snap['username']} and 33 others',
+                                        style: TextStyle(
+                                          color: Colors.white.withOpacity(0.5),
+                                        ),
+                                      ),
+                                    ],
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 5),
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 5),
+                            height: 50,
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                width: 0.9,
+                                color: Colors.white.withOpacity(0.5),
+                              ),
+                              borderRadius: BorderRadius.circular(25),
+                            ),
+                            child: Row(
+                              children: [
+                                InkWell(
+                                  onTap: () {},
+                                  child: Container(
+                                    padding: const EdgeInsets.all(5),
+                                    decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: Colors.blue),
+                                    child: Center(
+                                      child: Icon(
+                                        Icons.camera_alt,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(width: 10),
+                                Container(
+                                  width: 230,
+                                  child: TextFormField(
+                                    decoration: InputDecoration(
+                                      hintText: 'Send Message',
+                                      border: InputBorder.none,
+                                    ),
+                                  ),
+                                ),
+                                InkWell(
+                                  onTap: () {},
+                                  child: Icon(Icons.mic_outlined),
+                                ),
+                                const SizedBox(width: 5),
+                                InkWell(
+                                  onTap: () {},
+                                  child: Icon(Icons.photo),
+                                ),
+                                const SizedBox(width: 5),
+                                InkWell(
+                                  onTap: () {},
+                                  child: Icon(Icons.gif_box_rounded),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              );
             },
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
