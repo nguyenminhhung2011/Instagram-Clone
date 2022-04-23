@@ -1,5 +1,5 @@
 import 'dart:typed_data';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:instagran_tute/providers/user_provider.dart';
@@ -83,6 +83,10 @@ class _MainMessageState extends State<MainMessage> {
                   onPressed: () {},
                   icon: Icon(Icons.call_outlined),
                 ),
+                IconButton(
+                  onPressed: () {},
+                  icon: Icon(Icons.picture_in_picture),
+                ),
               ],
             ),
             const SizedBox(height: 10),
@@ -141,44 +145,33 @@ class _MainMessageState extends State<MainMessage> {
                           ),
                         ),
                         const SizedBox(height: 10),
-                        SendItem(
-                          tittle: "This is Messages",
-                          linkImage: "",
-                          typeMessage: 0,
-                        ),
-                        SendItem(
-                          tittle: "This is Messages OK luon Ok Luon",
-                          linkImage: "",
-                          typeMessage: 0,
-                        ),
-                        SendItem(
-                          tittle: "This is ",
-                          linkImage: "",
-                          typeMessage: 0,
-                        ),
-                        RecItem(
-                          tittle: 'Oke Oke luon',
-                          photoUrl: widget.snap['photoUrl'],
-                          typeMessage: 0,
-                          linkImage: "",
-                        ),
-                        RecItem(
-                          tittle: 'Oke Oke luon',
-                          photoUrl: widget.snap['photoUrl'],
-                          typeMessage: 1,
-                          linkImage:
-                              "https://scontent.fsgn2-1.fna.fbcdn.net/v/t1.6435-9/183151093_307118977572945_212309247841771097_n.jpg?_nc_cat=107&ccb=1-5&_nc_sid=e3f864&_nc_ohc=922MD3yWiRcAX8P7K4Q&_nc_ht=scontent.fsgn2-1.fna&oh=00_AT98nLDcJvlXQCk52T9PuxO_BDg1uZR4_2X0wunZOc9HOA&oe=6288F499",
-                        ),
-                        SendItem(
-                          tittle: "De tao gui cho m cai hinh",
-                          linkImage: "",
-                          typeMessage: 0,
-                        ),
-                        SendItem(
-                          tittle: "",
-                          linkImage:
-                              "https://scontent.fsgn2-1.fna.fbcdn.net/v/t39.30808-6/278953818_4902082829912141_754730703564157389_n.jpg?_nc_cat=105&ccb=1-5&_nc_sid=730e14&_nc_ohc=VSp8aySJnQ0AX_LIInF&_nc_ht=scontent.fsgn2-1.fna&oh=00_AT-nQnBis0mPPbF23ngIdtDT48yaWg06vyzuK-XKLKbIrA&oe=626797E4",
-                          typeMessage: 1,
+                        StreamBuilder(
+                          stream: FirebaseFirestore.instance
+                              .collection('messages')
+                              .snapshots(),
+                          builder: (context,
+                              AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>>
+                                  snapshots) {
+                            if (snapshots.connectionState ==
+                                ConnectionState.waiting) {
+                              return const Center(
+                                child: CircularProgressIndicator(
+                                    color: Colors.white),
+                              );
+                            }
+                            return Column(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: snapshots.data!.docs
+                                  .map(
+                                    (e) => messageItem(
+                                      snap: e.data(),
+                                      userProvider: widget.userProvider,
+                                      op: widget.snap,
+                                    ),
+                                  )
+                                  .toList(),
+                            );
+                          },
                         ),
                       ],
                     )
@@ -224,13 +217,42 @@ class _MainMessageState extends State<MainMessage> {
                               border: InputBorder.none,
                             ),
                             onFieldSubmitted: (String _) async {
-                              await FireStoreMethods().sendMessage(
-                                "",
-                                _,
-                                widget.userProvider.getUser.uid,
-                                widget.snap['uid'],
-                                0,
-                              );
+                              if (_.length > 25) {
+                                var l = (_.split(' '));
+                                if (l.length > 2) {
+                                  int countLength = 0;
+                                  String addS = "";
+                                  int check = 1;
+                                  int count = 0;
+                                  l.forEach(
+                                    (e) {
+                                      if ((countLength / 25).floor() == check &&
+                                          count < l.length - 1) {
+                                        addS += '\n';
+                                        check++;
+                                      }
+                                      countLength += e.length;
+                                      addS += e + ' ';
+                                      count++;
+                                    },
+                                  );
+                                  await FireStoreMethods().sendMessage(
+                                    "",
+                                    addS,
+                                    widget.userProvider.getUser.uid,
+                                    widget.snap['uid'],
+                                    0,
+                                  );
+                                } else {
+                                  await FireStoreMethods().sendMessage(
+                                    "",
+                                    _,
+                                    widget.userProvider.getUser.uid,
+                                    widget.snap['uid'],
+                                    0,
+                                  );
+                                }
+                              }
                               setState(() {
                                 _messController.clear();
                               });
@@ -318,5 +340,49 @@ class _MainMessageState extends State<MainMessage> {
         ),
       ),
     );
+  }
+}
+
+class messageItem extends StatefulWidget {
+  final Map<String, dynamic> snap;
+  final UserProvider userProvider;
+  final Map<String, dynamic> op;
+  const messageItem({
+    Key? key,
+    required this.snap,
+    required this.userProvider,
+    required this.op,
+  }) : super(key: key);
+
+  @override
+  State<messageItem> createState() => _messageItemState();
+}
+
+class _messageItemState extends State<messageItem> {
+  bool isShowdateTime = false;
+  @override
+  bool isCheckOpMess() {
+    if (widget.snap['uid1'] == widget.userProvider.getUser.uid ||
+        widget.snap['uid2'] == widget.userProvider.getUser.uid) {
+      if (widget.snap['uid1'] == widget.op['uid'] ||
+          widget.snap['uid2'] == widget.op['uid']) {
+        return true;
+      }
+      return false;
+    }
+    return false;
+  }
+
+  Widget build(BuildContext context) {
+    return (isCheckOpMess())
+        ? (widget.snap['uid1'] == widget.userProvider.getUser.uid)
+            ? SendItem(
+                snap: widget.snap,
+              )
+            : RecItem(
+                photoUrl: widget.op['photoUrl'],
+                snap: widget.snap,
+              )
+        : Container();
   }
 }
