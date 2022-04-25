@@ -252,6 +252,14 @@ class _MainMessageState extends State<MainMessage> {
                                     0,
                                   );
                                 }
+                              } else {
+                                await FireStoreMethods().sendMessage(
+                                  "",
+                                  _,
+                                  widget.userProvider.getUser.uid,
+                                  widget.snap['uid'],
+                                  0,
+                                );
                               }
                               setState(() {
                                 _messController.clear();

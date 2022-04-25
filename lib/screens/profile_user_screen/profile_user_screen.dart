@@ -524,6 +524,7 @@ class YourPost extends StatelessWidget {
               showDialog(
                 context: context,
                 builder: (context) => Dialog(
+                  backgroundColor: mobileBackgroundColor,
                   child: PostCard(
                     snap: snap,
                   ),

@@ -20,7 +20,21 @@ class PostCard extends StatefulWidget {
 }
 
 class _PostCardState extends State<PostCard> {
+  List allC = [];
+  bool isLoading = false;
   @override
+  void initState() {
+    super.initState();
+    getAllPost();
+  }
+
+  getAllPost() async {
+    allC = await FireStoreMethods().getAllComments(widget.snap['postId']);
+    setState(() {
+      isLoading = true;
+    });
+  }
+
   Widget build(BuildContext context) {
     final UserProvider userProvider = Provider.of<UserProvider>(context);
 
@@ -100,8 +114,20 @@ class _PostCardState extends State<PostCard> {
                 children: [
                   IconButton(
                     onPressed: () async {
-                      await FireStoreMethods().ListPost(widget.snap['postId'],
-                          userProvider.getUser.uid, widget.snap['likes']);
+                      await FireStoreMethods().ListPost(
+                        widget.snap['postId'],
+                        userProvider.getUser.uid,
+                        widget.snap['likes'],
+                      );
+                      if (widget.snap['likes']
+                          .contains(userProvider.getUser.uid)) {
+                        await FireStoreMethods().upLoadNotifi(
+                          userProvider.getUser.uid,
+                          widget.snap['uid'],
+                          widget.snap['postId'],
+                          1,
+                        );
+                      }
                     },
                     icon: Icon(
                       Icons.favorite,
@@ -180,7 +206,7 @@ class _PostCardState extends State<PostCard> {
                     InkWell(
                       onTap: () {},
                       child: Text(
-                        'view all 200 commnets',
+                        'view all ${allC.length} commnets',
                         style: TextStyle(
                           color: Colors.white.withOpacity(0.6),
                         ),

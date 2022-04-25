@@ -223,6 +223,12 @@ class _CommentScreenState extends State<CommentScreen> {
                         widget.userProvider.getUser.photoUrl,
                         widget.userProvider.getUser.uid,
                       );
+                      await FireStoreMethods().upLoadNotifi(
+                        widget.userProvider.getUser.uid,
+                        widget.snap['uid'],
+                        widget.snap['postId'],
+                        2,
+                      );
                       _cmtController.clear();
                     },
                     child: Text(

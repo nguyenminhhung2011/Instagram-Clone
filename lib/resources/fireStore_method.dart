@@ -90,6 +90,7 @@ class FireStoreMethods {
     }
   }
 
+  // 0: Following 1: like Post 2: cmt post
   Future<void> ListPost(String postUid, String uid, List Likes) async {
     try {
       if (Likes.contains(uid)) {
@@ -122,6 +123,7 @@ class FireStoreMethods {
         await _firestore.collection('users').doc(uid).update({
           'following': FieldValue.arrayUnion([userId]),
         });
+        await upLoadNotifi(uid, userId, "", 0);
       }
     } catch (err) {
       print(err.toString());
@@ -197,5 +199,33 @@ class FireStoreMethods {
         .get();
     final listP = querySnapshot.docs.map((e) => e.data()).toList();
     return listP;
+  }
+
+  Future<List> getAllWithIfPosts(String uid) async {
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection('Posts')
+        .where('uid', isEqualTo: uid)
+        .get();
+    final listP = querySnapshot.docs.map((e) => e.data()).toList();
+    return listP;
+  }
+
+  Future<List> getUser(String uid) async {
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .where('uid', isEqualTo: uid)
+        .get();
+    final listP = querySnapshot.docs.map((e) => e.data()).toList();
+    return listP;
+  }
+
+  Future<List> getAllComments(String uid) async {
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection('Posts')
+        .doc(uid)
+        .collection('comments')
+        .get();
+    final listC = querySnapshot.docs.map((e) => e.data()).toList();
+    return listC;
   }
 }
