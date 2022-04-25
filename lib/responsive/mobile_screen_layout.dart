@@ -14,6 +14,13 @@ import 'package:provider/provider.dart';
 import '../models/user.dart' as model;
 import '../screens/add_post_screen/add_post_screen.dart';
 
+const TextStyle _textStyle = TextStyle(
+  fontSize: 40,
+  fontWeight: FontWeight.bold,
+  letterSpacing: 2,
+  fontStyle: FontStyle.italic,
+);
+
 class MobileScreenLayout extends StatefulWidget {
   const MobileScreenLayout({Key? key}) : super(key: key);
 
@@ -42,28 +49,63 @@ class _MobileScreenLayoutState extends State<MobileScreenLayout> {
     });
   }
 
+  List<Widget> pages = const [
+    Text('Home', style: _textStyle),
+    Text('Search', style: _textStyle),
+    Text('Post', style: _textStyle),
+    Text('Notification', style: _textStyle),
+    Text('Profile', style: _textStyle),
+  ];
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: CupertinoTabBar(
-        backgroundColor: mobileBackgroundColor,
-        items: [
-          BottomNavi(
-              icon: Icon(Icons.home,
-                  color: (_page == 0) ? primaryColor : secondaryColor)),
-          BottomNavi(
-              icon: Icon(Icons.search,
-                  color: (_page == 1) ? primaryColor : secondaryColor)),
-          BottomNavi(
-              icon: Icon(Icons.add_circle,
-                  color: (_page == 2) ? primaryColor : secondaryColor)),
-          BottomNavi(
-              icon: Icon(Icons.favorite,
-                  color: (_page == 3) ? primaryColor : secondaryColor)),
-          BottomNavi(
-              icon: Icon(Icons.person,
-                  color: (_page == 4) ? primaryColor : secondaryColor)),
-        ],
-        onTap: NavigatorTapped,
+      bottomNavigationBar: NavigationBarTheme(
+        data: NavigationBarThemeData(
+          indicatorColor: Colors.blueAccent,
+          labelTextStyle: MaterialStateProperty.all(
+            const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+          ),
+        ),
+        child: NavigationBar(
+          backgroundColor: mobileBackgroundColor,
+          labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
+          height: 60,
+          selectedIndex: _page,
+          onDestinationSelected: (int newIndex) {
+            pageController.jumpToPage(newIndex);
+            setState(
+              () {
+                _page = newIndex;
+              },
+            );
+          },
+          destinations: [
+            NavigationDestination(
+              icon: Icon(Icons.home),
+              selectedIcon: Icon(Icons.home),
+              label: 'Home',
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.search),
+              selectedIcon: Icon(Icons.search),
+              label: 'Search',
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.add_circle),
+              selectedIcon: Icon(Icons.add_circle),
+              label: 'Post',
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.favorite),
+              selectedIcon: Icon(Icons.favorite),
+              label: 'Notification',
+            ),
+            NavigationDestination(
+              icon: Icon(Icons.person),
+              selectedIcon: Icon(Icons.person),
+              label: 'Profile',
+            )
+          ],
+        ),
       ),
       body: PageView(
         controller: pageController,
