@@ -49,13 +49,6 @@ class _MobileScreenLayoutState extends State<MobileScreenLayout> {
     });
   }
 
-  List<Widget> pages = const [
-    Text('Home', style: _textStyle),
-    Text('Search', style: _textStyle),
-    Text('Post', style: _textStyle),
-    Text('Notification', style: _textStyle),
-    Text('Profile', style: _textStyle),
-  ];
   Widget build(BuildContext context) {
     return Scaffold(
       bottomNavigationBar: NavigationBarTheme(
